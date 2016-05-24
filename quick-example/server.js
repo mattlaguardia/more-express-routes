@@ -7,12 +7,17 @@ app.set('view engine', 'ejs');
 var parseUrlencoded = bodyParser.urlencoded({extended: false});
 
 // STORE FOR CITIES IN MEMORY (AS LONG AS SERVER IS RUNNING) //
-var cities = [];
+var cities = [{}];
 
 app.get('/cities', function(req, res){
   res.render(process.cwd() + '/cities', {cities: cities});
 })
-
+app.post('/cities', function(req, res){
+  var city;
+  var name = request.body.name;
+  var description = request.body.description;
+  res.send('Post to page' + name + description);
+})
 // PASSING MULTIPLE MIDDLEWARE FUNCTIONS TO THIS ROUTE; THEY ARE EXECUTED SEQUENTIALLY //
 app.post('/cities', parseUrlencoded, function(request, response){
   var city;
@@ -20,8 +25,10 @@ app.post('/cities', parseUrlencoded, function(request, response){
   var description = request.body.description;
   city = {name: name, description: description}
   cities.push(city);
+  console.log(name);
+  console.log(description);
   // PASSING LOCAL VARIABLES TO BE USED IN EJS TEMPLATE //
-  response.render('cities', {cities: cities});
+  response.render(process.cwd() + 'cities', {cities: cities});
 })
 // NEED TO CALL THE PORT IN ORDER FOR THIS TO FUNCTION //
 app.listen(3000, function(){
